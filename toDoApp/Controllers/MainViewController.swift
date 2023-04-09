@@ -42,25 +42,27 @@ class MainViewController: UIViewController {
         setConstrains()
     }
     
-    func setDelegates() {
+    private func setDelegates() {
         tableView.dataSource = self
         tableView.delegate = self
     }
     
-    func setupViews() {
+    private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(titleLabel)
         view.addSubview(tableView)
     }
     
-    func setupNavBar() {
+    private func setupNavBar() {
         title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = navBarButton
     }
     
     @objc func barButtonTapped() {
-        showAlert(title: "add")
+        let navigationVC = UINavigationController()
+        navigationVC.setViewControllers([SettingsViewController()], animated: true)
+        present(navigationVC, animated: true)
     }
 }
 
@@ -109,10 +111,10 @@ extension MainViewController: UITableViewDelegate {
     }
 }
 
-// MARK: Alert Controller
+// MARK: - Alert Controller
 
 extension MainViewController {
-    private func showAlert(title: String) {
+    private func showAlert(title: String, status: String) {
         let alert = UIAlertController(
             title: title,
             message: nil,
@@ -129,8 +131,8 @@ extension MainViewController {
         
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
             if let name = alert.textFields?.first?.text, let description = alert.textFields?.last?.text {
-                let newTask = DoList(name: name, description: description, importance: .light)
-                self.doList.append(newTask)
+//                let newTask = DoList(name: name, description: description, importance: )
+//                self.doList.append(newTask)
             }
             self.tableView.reloadData()
         }

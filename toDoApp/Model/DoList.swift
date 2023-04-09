@@ -17,8 +17,8 @@ struct DoList {
     }
 }
 
-enum Importance: String {
-    case light = "Low priority"
-    case medium = "Medium priority"
-    case high = "High priority"
+struct Importance {
+    var low: String
+    var medium: String
+    var high: String
 }
