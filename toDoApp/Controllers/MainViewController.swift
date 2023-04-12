@@ -42,12 +42,18 @@ class MainViewController: UIViewController {
         setConstrains()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     private func setDelegates() {
         tableView.dataSource = self
         tableView.delegate = self
     }
     
     private func setupViews() {
+        tableView.rowHeight = 40
         view.backgroundColor = .white
         view.addSubview(titleLabel)
         view.addSubview(tableView)
@@ -60,37 +66,36 @@ class MainViewController: UIViewController {
     }
     
     @objc func barButtonTapped() {
-        let navigationVC = UINavigationController()
-        navigationVC.setViewControllers([SettingsViewController()], animated: true)
-        present(navigationVC, animated: true)
-    }
-}
-
-extension MainViewController {
-    private func setConstrains() {
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(5)
-            make.trailing.equalTo(view.snp.trailing).inset(10)
-        }
-        
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.top).inset(50)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
+        let settingsVC = SettingsViewController()
+        settingsVC.mainVC = self
+        navigationController?.pushViewController(settingsVC, animated: true)
     }
 }
 
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let viewSeparatorLine = UIView(frame:CGRect(x: 0, y: cell.contentView.frame.size.height - 8.0, width: cell.contentView.frame.size.width, height: 8))
         let doList = doList[indexPath.row]
-        cell.textLabel?.text = doList.name
-        cell.detailTextLabel?.text = doList.description
+        let status = doList.status
+        var content = cell.defaultContentConfiguration()
+        cell.contentView.addSubview(viewSeparatorLine)
+        content.text = doList.name
+        content.image = DoList.getStatus(status: status)
+        content.imageProperties.cornerRadius = tableView.rowHeight / 2
+        cell.contentConfiguration = content
+        
+//        cell.textLabel?.text = doList.name
+//        cell.detailTextLabel?.text = doList.description
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return doList.count
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 10))
     }
 }
 
@@ -99,6 +104,7 @@ extension MainViewController: UITableViewDelegate {
         let infoVC = InfoViewController()
         infoVC.nameLabel.text = doList[indexPath.row].name
         infoVC.descriptionLabel.text = doList[indexPath.row].description
+        infoVC.statusView.backgroundColor = doList[indexPath.row].status
         navigationController?.pushViewController(infoVC, animated: true)
     }
     
@@ -114,26 +120,14 @@ extension MainViewController: UITableViewDelegate {
 // MARK: - Alert Controller
 
 extension MainViewController {
-    private func showAlert(title: String, status: String) {
+    private func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,
-            message: nil,
+            message: message,
             preferredStyle: .alert
         )
         
-        alert.addTextField { textField in
-            textField.placeholder = "task"
-        }
-        
-        alert.addTextField { textField in
-            textField.placeholder = "description"
-        }
-        
-        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
-            if let name = alert.textFields?.first?.text, let description = alert.textFields?.last?.text {
-//                let newTask = DoList(name: name, description: description, importance: )
-//                self.doList.append(newTask)
-            }
+        let saveAction = UIAlertAction(title: "Delete", style: .default) { _ in
             self.tableView.reloadData()
         }
         
@@ -142,5 +136,19 @@ extension MainViewController {
         alert.addAction(saveAction)
         alert.addAction(cancelAction)
         present(alert, animated: true)
+    }
+}
+
+extension MainViewController {
+    private func setConstrains() {
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(5)
+            make.trailing.equalTo(view.snp.trailing).inset(10)
+        }
+        
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.top).inset(50)
+            make.leading.trailing.bottom.equalToSuperview().inset(5)
+        }
     }
 }

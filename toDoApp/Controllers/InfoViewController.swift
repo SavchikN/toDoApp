@@ -26,6 +26,14 @@ class InfoViewController: UIViewController {
         return label
     }()
     
+    let statusView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.borderWidth = 0.3
+        view.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,15 +42,16 @@ class InfoViewController: UIViewController {
         setConstraints()
     }
     
-    func setupNavBar() {
+    private func setupNavBar() {
         title = "Info about task"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func setupViews() {
+    private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
+        view.addSubview(statusView)
     }
 }
 
@@ -57,5 +66,15 @@ extension InfoViewController {
             make.top.equalTo(nameLabel.snp.bottom).inset(-15)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(15)
         }
+        
+        statusView.snp.makeConstraints { make in
+            make.top.equalTo(descriptionLabel.snp.bottom).inset(-15)
+            make.centerX.equalTo(view.snp.centerX)
+            make.height.equalTo(100)
+            make.width.equalTo(100)
+        }
+        
+        statusView.layoutIfNeeded()
+        statusView.layer.cornerRadius = statusView.frame.size.width / 2
     }
 }

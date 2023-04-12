@@ -25,8 +25,8 @@ class TaskTypeView: UIView {
         return collectionView
     }()
     
-    let typeTask = [#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1), #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)]
-    var selectedType = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
+    let typeTask = [#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), #colorLiteral(red: 0.9972404838, green: 0.498265624, blue: 0, alpha: 1), #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)]
+    var selectedType: UIColor?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,11 +70,11 @@ extension TaskTypeView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.row {
         case 1:
-            selectedType = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+            selectedType = #colorLiteral(red: 0.9972404838, green: 0.498265624, blue: 0, alpha: 1)
         case 2:
             selectedType = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
         default:
-            selectedType = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
+            selectedType = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
         }
     }
 }

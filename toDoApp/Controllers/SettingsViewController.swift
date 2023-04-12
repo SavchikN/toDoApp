@@ -64,6 +64,7 @@ class SettingsViewController: UIViewController {
     }()
     
     let taskView = TaskTypeView()
+    var mainVC: MainViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +92,15 @@ class SettingsViewController: UIViewController {
     @objc func saveButtonTapped() {
         if nameTextField.text == "" {
             showAlert(title: "Oops!", message: "Enter a name for your task!")
-        } 
+        } else if taskView.selectedType == nil {
+            showAlert(title: "Oops!", message: "Enter a type for your task!")
+        } else {
+            let newTask = DoList(name: nameTextField.text!, description: descriptionTextField.text!, status: taskView.selectedType!)
+            mainVC?.doList.append(newTask)
+            mainVC?.tableView.reloadData()
+        }
+        
+        showAlert(title: "Great!", message: "Task was added!")
     }
 }
 
@@ -144,6 +153,7 @@ extension SettingsViewController {
         let okAction = UIAlertAction(title: "OK", style: .default) { _ in
             self.nameTextField.text = ""
             self.descriptionTextField.text = ""
+            self.navigationController?.popViewController(animated: true)
         }
         alert.addAction(okAction)
         present(alert, animated: true)

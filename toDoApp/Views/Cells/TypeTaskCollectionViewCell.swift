@@ -10,6 +10,7 @@ import SnapKit
 
 class TypeTaskCollectionViewCell: UICollectionViewCell {
     
+    
     override var isSelected: Bool {
         didSet {
             if isSelected {
